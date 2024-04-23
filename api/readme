@@ -1,0 +1,9 @@
+# module.exports vs. exports
+module.exports vs. exports, they both serve the same purpose in Node.js, which is to export modules for use in other files. However, there's a subtle difference between the two:
+
+module.exports is what the module exports. If you assign a new value to module.exports, it will export that new value.
+exports is a shorthand notation for module.exports. When you assign properties or methods directly to exports, it modifies the module.exports object. But if you assign a new value to exports, it loses its reference to module.exports.
+Generally, you can use either one depending on your preference or coding style. However, if you're exporting a single item, it's recommended to use module.exports. If you're exporting multiple items, you can use exports.
+
+# to use export default , you need to add this to your json file 
+"type": "module",

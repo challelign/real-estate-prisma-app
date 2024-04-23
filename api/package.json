@@ -1,0 +1,22 @@
+{
+	"name": "real-estate-app-prisma-node",
+	"version": "1.0.0",
+	"description": " Real Estate App with nodejs and prisma",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon app.js"
+	},
+	"author": "challelign tilahun",
+	"license": "ISC",
+	"dependencies": {
+		"@prisma/client": "^5.12.1",
+		"bcryptjs": "^2.4.3",
+		"cookie-parser": "^1.4.6",
+		"cors": "^2.8.5",
+		"express": "^4.19.2",
+		"jsonwebtoken": "^9.0.2",
+		"prisma": "^5.12.1",
+		"zod": "^3.23.0"
+	}
+}
