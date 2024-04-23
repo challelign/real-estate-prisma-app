@@ -98,10 +98,13 @@ exports.login = async (req, res) => {
 	try {
 		const loginData = req.body;
 		loginSchema.parse(loginData);
-		const { email, password } = req.body;
+		const { username, password } = req.body;
+		if (!username || !password) {
+			return res.status(404).json({ message: "All the field is required" });
+		}
 		const userFound = await prisma.user.findUnique({
 			where: {
-				email,
+				username,
 			},
 		});
 		if (!userFound) {
@@ -121,18 +124,18 @@ exports.login = async (req, res) => {
 			process.env.JWT_SECRET,
 			{ expiresIn: age }
 		);
+		const { password: userPassword, ...userInfo } = userFound;
 		res
-			.cookie("tokenRealEstateUser", token, {
+			.cookie("tokenrealestateuser", token, {
 				httpOnly: true,
 				// secure: true,
 				maxAge: age,
 			})
 			.status(201)
-			.json({ message: "login successfully" });
+			.json({ message: "login successfully", userInfo });
 	} catch (error) {
 		console.log(error);
 		if (error instanceof z.ZodError) {
-			// If ZodError, extract individual field errors
 			const fieldErrors = {};
 			error.errors.forEach((err) => {
 				const path = err.path.join(".");
@@ -148,7 +151,7 @@ exports.login = async (req, res) => {
 };
 exports.logout = (req, res) => {
 	res
-		.clearCookie("tokenRealEstateUser", {
+		.clearCookie("tokenrealestateuser", {
 			httpOnly: true,
 			// secure: true,
 			maxAge: 0,

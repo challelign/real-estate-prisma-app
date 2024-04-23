@@ -3,28 +3,33 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
-// const backendBaseUrl = process.env.BACKEND_BASE_URL;
+import apiRequest from "../../lib/apiRequest";
 
 function Register() {
 	const [error, setError] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+
 	const navigate = useNavigate();
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		setIsLoading(true);
+		setError("");
+
 		const formData = new FormData(e.target);
 		const username = formData.get("username");
 		const email = formData.get("email");
 		const password = formData.get("password");
 		try {
-			const res = await axios.post(`http://localhost:8800/api/auth/register`, {
+			const res = await apiRequest.post(`/auth/register`, {
 				username,
 				email,
 				password,
 			});
 			navigate("/login");
-			toast.success("Success Notification !", {
+			toast.success("User created successfully !", {
 				position: "top-center",
 			});
-			console.log(res.data);
+			// console.log(res.data);
 		} catch (error) {
 			console.log(error);
 			// setError(err.response.message);
@@ -39,7 +44,6 @@ function Register() {
 						)}
 					</div>
 				);
-				// Display or handle the validation errors as needed
 			} else if (
 				error.response &&
 				error.response.data &&
@@ -47,11 +51,12 @@ function Register() {
 			) {
 				console.error("Error:", error.response.data.message);
 				setError(error.response.data.message);
-				// Display the error message in your UI or handle it as needed
 			} else {
 				console.error("Error:", error.message);
 				setError(error.message);
 			}
+		} finally {
+			setIsLoading(false);
 		}
 	};
 	return (
@@ -59,11 +64,21 @@ function Register() {
 			<div className="formContainer">
 				<form onSubmit={handleSubmit}>
 					<h1>Create an Account</h1>
-					<input name="username" type="text" placeholder="Username" />
-					<input name="email" type="text" placeholder="Email" />
+					<input
+						name="username"
+						disabled={isLoading}
+						type="text"
+						placeholder="Username"
+					/>
+					<input
+						name="email"
+						type="text"
+						disabled={isLoading}
+						placeholder="Email"
+					/>
 					<input name="password" type="password" placeholder="Password" />
 					{error && <span>{error}</span>}
-					<button>Register</button>
+					<button disabled={isLoading}>Register</button>
 					<Link to="/login">Do you have an account?</Link>
 				</form>
 			</div>
