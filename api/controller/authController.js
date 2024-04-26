@@ -120,13 +120,14 @@ exports.login = async (req, res) => {
 		const token = jwt.sign(
 			{
 				id: userFound.id,
+				isAdmin: true,
 			},
 			process.env.JWT_SECRET,
 			{ expiresIn: age }
 		);
 		const { password: userPassword, ...userInfo } = userFound;
 		res
-			.cookie("tokenrealestateuser", token, {
+			.cookie("TokenRealEstate", token, {
 				httpOnly: true,
 				// secure: true,
 				maxAge: age,
@@ -151,7 +152,7 @@ exports.login = async (req, res) => {
 };
 exports.logout = (req, res) => {
 	res
-		.clearCookie("tokenrealestateuser", {
+		.clearCookie("TokenRealEstate", {
 			httpOnly: true,
 			// secure: true,
 			maxAge: 0,

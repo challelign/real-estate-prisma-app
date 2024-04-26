@@ -12,6 +12,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth/", require("./routes/authRoute"));
+app.use("/api/users/", require("./routes/userRoute"));
+app.use("/api/posts/", require("./routes/postRoute"));
+app.use("/api/check/", require("./routes/checkRoute"));
 app.listen(8800, () => {
 	console.log("Server is running!");
 });
