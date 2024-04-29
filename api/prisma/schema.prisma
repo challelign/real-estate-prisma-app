@@ -24,21 +24,30 @@ model User {
 }
 
 model Post {
-  id        String   @id @default(uuid())
-  title     String
-  price     Int
-  images    String
-  address   String
-  city      String
-  bedroom   Int
-  bathroom  Int
-  latitude  String
-  longitude String
-  type      Type
-  property  Property
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  id         String      @id @default(uuid())
+  title      String
+  price      Int
+  imagesPost Image[]
+  address    String
+  city       String
+  bedroom    Int
+  bathroom   Int
+  latitude   String
+  longitude  String
+  type       Type
+  property   Property
+  createdAt  DateTime    @default(now())
+  userId     String
+  // when user is deleted post also deleted
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postDetail PostDetail?
+}
+
+model Image {
+  id     String @id @default(uuid())
+  url    String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
 }
 
 enum Type {
@@ -51,4 +60,19 @@ enum Property {
   house
   condo
   land
+}
+
+model PostDetail {
+  id         String  @id @default(uuid())
+  desc       String
+  utilities  String?
+  pet        String?
+  income     String?
+  size       Int?
+  school     Int?
+  bus        Int?
+  restaurant Int?
+  // when post is deleted postDetail also deleted
+  post       Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     String  @unique
 }
