@@ -10,7 +10,7 @@ import Register from "./routes/register/register";
 import ProtectedRoute from "./routes/layout/ProtectedRoute";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
-import { singlePageLoader } from "./lib/loader";
+import { listPageLoader, singlePageLoader } from "./lib/loader";
 function App() {
 	const router = createBrowserRouter([
 		{
@@ -24,6 +24,7 @@ function App() {
 				{
 					path: "/list",
 					element: <ListPage />,
+					loader: listPageLoader,
 				},
 				{
 					path: "/:id",

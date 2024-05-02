@@ -1,9 +1,29 @@
 const { prisma } = require("../lib/db");
 
 exports.getPosts = async (req, res) => {
+	const query = req.query;
+	console.log("queryPrams", query);
 	try {
-		const posts = await prisma.post.findMany({});
-		res.status(200).json(posts);
+		const posts = await prisma.post.findMany({
+			where: {
+				city: query.city || undefined,
+				type: query.type || undefined,
+				property: query.property || undefined,
+				bedroom: parseInt(query.bedroom) || undefined,
+				price: {
+					gte: parseInt(query.minPrice) || 0,
+					lte: parseInt(query.maxPrice) || 1000000000,
+				},
+			},
+			include: {
+				postDetail: true,
+				imagesPost: true,
+			},
+		});
+		setTimeout(() => {
+			res.status(200).json(posts);
+		}, 2000);
+		// res.status(200).json(posts);
 	} catch (error) {
 		console.log(error.message);
 		res.status(500).json({ message: "Failed to get posts" });
