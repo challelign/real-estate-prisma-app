@@ -11,9 +11,10 @@ const ProtectedRoute = () => {
 		}
 	}, [currentUser]);
 
+	console.log(currentUser);
 	return (
 		<>
-			{currentUser ? (
+			{currentUser && currentUser?.userInfo?.username ? (
 				<div className="layout">
 					<div className="navbar">
 						<Navbar />

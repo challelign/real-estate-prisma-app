@@ -1,11 +1,14 @@
 import "./login.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import apiRequest from "../../lib/apiRequest";
 import { AuthContext } from "../../context/AuthContext";
+// import { useHistory } from "react-router-dom";
+
 function Login() {
-	const { updateUser } = useContext(AuthContext);
+	const { updateUser, currentUser } = useContext(AuthContext);
 
 	const [error, setError] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +64,13 @@ function Login() {
 			setIsLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		if (!currentUser) {
+			navigate("/login");
+		}
+		navigate("/");
+	}, [currentUser, navigate]);
 	return (
 		<div className="login">
 			<div className="formContainer">

@@ -32,7 +32,10 @@ function ListPage() {
 						>
 							{(postResponse) =>
 								postResponse.data.map((item) => (
-									<Card key={item.id} item={item} />
+									<>
+										{console.log(JSON.stringify(item))}
+										<Card key={item?.id} item={item} />
+									</>
 								))
 							}
 						</Await>

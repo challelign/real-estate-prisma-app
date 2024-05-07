@@ -43,6 +43,7 @@ model Post {
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   postDetail PostDetail?
 
+  @@index([city, id])
   @@fulltext([city, address])
 }
 
