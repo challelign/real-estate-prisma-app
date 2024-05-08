@@ -1,4 +1,5 @@
 const { prisma } = require("../lib/db");
+const { savePost } = require("./userController");
 
 exports.getPosts = async (req, res) => {
 	const query = req.query;
@@ -47,9 +48,32 @@ exports.getPost = async (req, res) => {
 				},
 				postDetail: true,
 				imagesPost: true,
+				savedPosts: true,
 			},
 		});
-		res.status(200).json(post);
+		const token = req.cookies?.token;
+
+		if (token) {
+			jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
+				if (!err) {
+					const saved = await prisma.savedPost.findUnique({
+						where: {
+							userId_postId: {
+								postId: id,
+								userId: payload.id,
+							},
+						},
+					});
+
+					if (saved.postId === post.id) {
+						res.status(200).json({ ...post, isSaved: saved ? true : false });
+					}
+					console.log("isSaved Log", saved);
+				}
+			});
+		} else {
+			res.status(200).json({ ...post, isSaved: false });
+		}
 	} catch (error) {
 		console.log(error.message);
 		res.status(500).json({ message: "Failed to get post" });

@@ -2,13 +2,36 @@ import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
 import { singlePostData, userData } from "../../lib/dummydata";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify";
+import apiRequest from "../../lib/apiRequest";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 function SinglePage() {
 	const post = useLoaderData();
+	const [saved, setSaved] = useState(post?.isSaved);
+
+	console.log(saved);
 
 	console.log(post);
+
+	const navigate = useNavigate();
+	const { updateUser, currentUser } = useContext(AuthContext);
+
+	const handleSave = async () => {
+		if (!currentUser) {
+			navigate("/login");
+		}
+		setSaved((prev) => !prev);
+		try {
+			await apiRequest.post("/users/save", { postId: post.id });
+			console.log("done");
+		} catch (err) {
+			console.log(err);
+			setSaved((prev) => !prev);
+		}
+	};
 	return (
 		<div className="singlePage">
 			<div className="details">
@@ -120,7 +143,7 @@ function SinglePage() {
 					<div className="mapContainer">
 						<Map items={[post]} />
 					</div>
-					{/* <div className="buttons">
+					<div className="buttons">
 						<button>
 							<img src="/chat.png" alt="" />
 							Send a Message
@@ -134,7 +157,7 @@ function SinglePage() {
 							<img src="/save.png" alt="" />
 							{saved ? "Place Saved" : "Save the Place"}
 						</button>
-					</div> */}
+					</div>
 				</div>
 			</div>
 		</div>

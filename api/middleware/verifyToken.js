@@ -20,13 +20,19 @@ exports.verifyToken = async (req, res, next) => {
 			where: {
 				id: req.userId,
 			},
+			select: {
+				id: true,
+				username: true,
+				email: true,
+				avatar: true,
+				password: false, // Exclude the password field
+			},
 		});
-		const { password: userPassword, ...userInfo } = user; //remove password field
 
-		console.log("USER_FROM_TOKEN=>", userInfo);
+		console.log("USER_FROM_TOKEN=>", user);
 		if (!user) {
-			console.log("USER_NOT_FOUND_WITH_THIS_USER_ID=>", req.userId);
-			return res.status(201).json({
+			// console.log("USER_NOT_FOUND_WITH_THIS_USER_ID=>", req.userId);
+			return res.status(401).json({
 				message: "Your are not authorized, Please login",
 			});
 		}

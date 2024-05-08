@@ -66,10 +66,9 @@ function Login() {
 	};
 
 	useEffect(() => {
-		if (!currentUser) {
-			navigate("/login");
+		if (currentUser) {
+			navigate("/profile");
 		}
-		navigate("/");
 	}, [currentUser, navigate]);
 	return (
 		<div className="login">

@@ -15,12 +15,14 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  username   String?  @unique
-  email      String   @unique
-  password   String
-  avatar     String?
-  Post       Post[]
+  id        String      @id @default(uuid())
+  username  String?     @unique
+  email     String      @unique
+  password  String
+  avatar    String?
+  Post      Post[]
+  savedPost SavedPost[]
+
   created_at DateTime @default(now())
 }
 
@@ -42,6 +44,7 @@ model Post {
   // when user is deleted post also deleted
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   postDetail PostDetail?
+  savedPosts SavedPost[]
 
   @@index([city, id])
   @@fulltext([city, address])
@@ -79,4 +82,16 @@ model PostDetail {
   // when post is deleted postDetail also deleted
   post       Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId     String  @unique
+}
+
+model SavedPost {
+  id   String @id @default(uuid())
+  user User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId    String   @unique
+  postId    String   @unique
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId]) // to prevent duplicate post save  
 }
